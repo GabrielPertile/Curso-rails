@@ -1,0 +1,43 @@
+<div class="starter-template jumbotron text-muted bg-dark">
+  <h3><%= msg_jumbotron %></h3>    
+</div>
+
+<% @questions.each do |question| %>
+  <%= form_with url: site_answer_path do |form| %>
+  <div class="card">
+    <h3 class="card-header">
+      <span class="badge badge-info">
+        <%= link_to "#{question.subject.description} (#{question.subject.questions_count})", site_search_subject_path(question.subject_id, question.subject.description), style:"color: white;" %>
+      </span>
+      <%= question.description %>
+    </h3>
+    <div class="card-body">
+      <ul>
+        <% question.answers.each do |answer| %>
+          <li style="list-style:none">
+            <div class="radio">
+              <label>
+                <%= radio_button_tag 'answer_id', answer.id %>
+                <%= answer.description %>
+              </label>
+            </div>
+          </li>
+        <% end %>
+        <li style="list-style:none">
+          <%= form.submit "Responde",class:"btn btn-outline-secondary", id:"submit_#{question.id}"%>
+        </li>
+      </ul>      
+    </div>
+  </div><br>
+  <% end %>  
+<% end %>
+
+<% if user_signed_in? %>
+  <div class="container pagination justify-content-center">
+      <%= paginate @questions %>
+  </div>
+<% else %>
+  <div class="alert alert-warning" role="alert">
+    Efetue o login para poder continuar respondendo as questões ...
+  </div>
+<% end %>
